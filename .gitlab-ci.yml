@@ -1,9 +1,43 @@
 stages:
+  - lint
   - test
+  - build
 
-test_job:
+default:
   image: node:20
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+
+before_script:
+  - node --version
+  - npm --version
+  - npm ci
+  - mkdir -p reports
+
+lint:
+  stage: lint
+  script:
+    - npm run lint
+
+test:
   stage: test
   script:
-    - node --version
-    - echo "CI is working"
+    - npm test
+  artifacts:
+    when: always
+    reports:
+      junit: reports/junit.xml
+    paths:
+      - reports/junit.xml
+    expire_in: 7 days
+
+build:
+  stage: build
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 7 days
