@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "lint": "node -c src/index.js",
+    "lint": "node -check src/index.js",
     "test": "node --test --test-reporter=junit --test-reporter-destination=reports/junit.xml",
     "build": "node scripts/build.js"
   }
