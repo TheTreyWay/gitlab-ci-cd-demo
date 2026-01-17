@@ -2,6 +2,14 @@ stages:
   - lint
   - test
   - build
+  - docker
+
+# Create pipelines only for main and merge requests
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - when: never
 
 default:
   image: node:20
@@ -41,3 +49,29 @@ build:
     paths:
       - dist/
     expire_in: 7 days
+
+docker-build:
+  stage: docker
+  image: docker:27
+  services:
+    - docker:27-dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+  # Build Docker image on main + merge requests
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  before_script:
+    - docker version
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+  script:
+    # Tag: main -> :main, MR -> :mr-<iid>
+    - |
+      if [ "$CI_COMMIT_BRANCH" = "main" ]; then
+        TAG="main"
+      else
+        TAG="mr-${CI_MERGE_REQUEST_IID}"
+      fi
+      echo "Using tag: $TAG"
+      docker build -t "$CI_REGISTRY_IMAGE:$TAG" .
+      docker push "$CI_REGISTRY_IMAGE:$TAG"
