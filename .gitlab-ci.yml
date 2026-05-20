@@ -43,31 +43,36 @@ test:
   script:
     - npm test
   artifacts:
+    name: "test-reports-$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA"
     when: always
     reports:
       junit: reports/junit.xml
     paths:
       - reports/junit.xml
-    expire_in: 7 days
+    expire_in: 14 days
 
 coverage:
   stage: coverage
   script:
     - npm run coverage
   coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
+  name: "coverage-$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA"
   artifacts:
     paths:
       - coverage/
-    expire_in: 7 days
+    expire_in: 14 days
 
 build:
   stage: build
   script:
     - npm run build
+    - tar -czf release.tar.gz dist/
   artifacts:
+    name: "build-$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA"
     paths:
       - dist/
-    expire_in: 7 days
+      - release.tar.gz
+    expire_in: 14 days
 
 docker-build:
   stage: docker
