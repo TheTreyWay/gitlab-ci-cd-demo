@@ -76,6 +76,17 @@ These scans help identify:
 
 ---
 
+# Pipeline Artifacts
+
+The pipeline preserves:
+
+- build outputs (`dist/`)
+- compressed release bundles
+- JUnit test reports
+- coverage reports
+
+Artifacts are downloadable directly from GitLab pipelines and retained according to pipeline retention policies.
+
 # Docker
 
 The application is containerized using Docker with:
