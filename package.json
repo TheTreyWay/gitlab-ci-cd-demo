@@ -5,6 +5,10 @@
   "scripts": {
     "lint": "node --check src/index.js",
     "test": "node --test --test-reporter=junit --test-reporter-destination=reports/junit.xml",
+    "coverage": "c8 --reporter=lcov --reporter=text npm test",
     "build": "node scripts/build.js"
+  },
+  "devDependencies": {
+    "c8": "^11.0.0"
   }
 }
