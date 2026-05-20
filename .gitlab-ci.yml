@@ -12,6 +12,7 @@ stages:
 # Create pipelines only for main and merge requests
 workflow:
   rules:
+    - if: $CI_COMMIT_TAG
     - if: $CI_COMMIT_BRANCH == "main"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - when: never
@@ -40,8 +41,7 @@ lint:
 test:
   stage: test
   script:
-    - npm test -- --coverage
-  coverage: '/All files\s*\|\s*([\d\.]+%)/'
+    - npm test
   artifacts:
     when: always
     reports:
@@ -78,6 +78,7 @@ docker-build:
     DOCKER_TLS_CERTDIR: "/certs"
   # Build Docker image on main + merge requests
   rules:
+    - if: $CI_COMMIT_TAG
     - if: $CI_COMMIT_BRANCH == "main"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   before_script:
@@ -87,6 +88,8 @@ docker-build:
     # Tag: main -> :main, MR -> :mr-<iid>
     - |
       if [ "$CI_COMMIT_BRANCH" = "main" ]; then
+      TAG="$CI_COMMIT_TAG"
+      elif [ "$CI_COMMIT_BRANCH" = "main" ]; then
         TAG="main"
       else
         TAG="mr-${CI_MERGE_REQUEST_IID}"
