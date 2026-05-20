@@ -18,11 +18,10 @@ RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser
 
 # Expose app port
-EXPOSE 3000
+# EXPOSE 3000
 
 # Healthcheck
-HEALTHCHECK CMD wget --spider http://localhost:3000 || exit 1
+# HEALTHCHECK CMD wget --spider http://localhost:3000 || exit 1
 
 # Start application
-COPY dist ./dist
 CMD ["node", "src/index.js"]
