@@ -56,8 +56,8 @@ coverage:
   script:
     - npm run coverage
   coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
-  name: "coverage-$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA"
   artifacts:
+    name: "coverage-$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA"
     paths:
       - coverage/
     expire_in: 14 days
