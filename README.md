@@ -42,7 +42,10 @@ The pipeline demonstrates continuous integration practices such as linting, auto
 ├── package-lock.json
 └── README.md
 ```
-
+Pipelines run on:
+- main
+- merge requests
+- tags/releases
 ---
 
 # CI/CD Pipeline Stages
