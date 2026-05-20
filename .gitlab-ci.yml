@@ -19,7 +19,7 @@ workflow:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - when: never
   
-  variables:
+variables:
   CS_IMAGE: "$CI_REGISTRY_IMAGE:main"
 
 default:
