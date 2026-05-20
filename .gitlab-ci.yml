@@ -27,6 +27,15 @@ default:
       - node_modules/
   interruptible: true
 
+.node-job:
+  image: node:20
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules/
+
 before_script:
   - node --version
   - npm --version
@@ -34,11 +43,13 @@ before_script:
   - mkdir -p reports
 
 lint:
+  extends: .node-job
   stage: lint
   script:
     - npm run lint
 
 test:
+  extends: .node-job
   stage: test
   script:
     - npm test
@@ -52,6 +63,7 @@ test:
     expire_in: 14 days
 
 coverage:
+  extends: .node-job
   stage: coverage
   script:
     - npm run coverage
@@ -63,6 +75,7 @@ coverage:
     expire_in: 14 days
 
 build:
+  extends: .node-job
   stage: build
   script:
     - npm run build
