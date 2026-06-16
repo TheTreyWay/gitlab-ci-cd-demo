@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "lint": "node --check src/index.js",
-    "test": "node --test --test-reporter=junit --test-reporter-destination=reports/junit.xml",
+    "lint": "node --check src/app.js && node --check src/index.js",
+    "test": "mkdirp reports && node --test --test-reporter=junit --test-reporter-destination=reports/junit.xml",
     "coverage": "c8 --reporter=lcov --reporter=text npm test",
     "build": "node scripts/build.js"
   },
   "devDependencies": {
-    "c8": "^11.0.0"
+    "c8": "^11.0.0",
+    "mkdirp": "^3.0.1"
   }
 }
