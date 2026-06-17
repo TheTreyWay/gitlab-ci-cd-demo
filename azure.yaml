@@ -5,6 +5,7 @@ metadata:
 services:
   web:
     project: .
+    image: web
     host: containerapp
     docker:
       path: Dockerfile

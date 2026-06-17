@@ -182,9 +182,10 @@ The provisioning inventory is small and cost-optimized, but validation must run 
 | AZD installation | `winget list --id Microsoft.Azd` | Installed, but current shell cannot resolve `azd` until PATH/session refresh | 2026-06-16 |
 | AZD executable | `C:\Users\globber\AppData\Local\Programs\Azure Dev CLI\azd.exe version` | Pass | 2026-06-16 |
 | AZD environment | `azd env new dev`, `azd env set AZURE_SUBSCRIPTION_ID ...`, `azd env set AZURE_LOCATION eastus` | Pass | 2026-06-16 |
-| AZD auth check | `azd auth login --check-status` | Not logged in | 2026-06-16 |
+| AZD auth check | `azd auth login --check-status` | Pass, logged in as `thaney3562@mail.kvcc.edu` | 2026-06-16 |
 | AZD device login | `azd auth login --use-device-code` | Timed out before login completed in Codex shell | 2026-06-16 |
-| AZD validation | `azd provision --preview --no-prompt`, `azd package --no-prompt` | Blocked until AZD auth is completed | 2026-06-16 |
+| AZD package | `azd package --no-prompt` | Pass, image tagged `ci-cd-cloud-lab/web-dev:azd-deploy-1781656192` | 2026-06-16 |
+| AZD provision preview | `azd provision --preview --no-prompt` | Blocked: subscription is disabled/read-only (`ReadOnlyDisabledSubscription`) | 2026-06-16 |
 
 **Validated by:** azure-validate partial run. Full Azure validation still required before deployment.
 
@@ -227,6 +228,7 @@ The application does not access Azure data-plane services yet, so no Key Vault, 
 Current phase: Ready for Validation
 
 1. Refresh Azure CLI authentication if needed.
-2. Complete AZD authentication with `azd auth login --use-device-code`.
-3. Deploy with the Azure deployment workflow.
-4. Verify public endpoint health checks.
+2. Re-enable subscription `Azure for Students` or choose an active Azure subscription.
+3. Re-run `azd provision --preview --no-prompt`.
+4. Deploy with the Azure deployment workflow.
+5. Verify public endpoint health checks.
