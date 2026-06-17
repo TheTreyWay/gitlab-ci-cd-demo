@@ -25,7 +25,8 @@ It starts as a simple HTTP service, then grows into a portfolio-ready cloud depl
 * GitLab dependency vulnerability scanning
 * GitLab secret detection
 * GitLab container scanning
-* Placeholder staging and production deployment jobs
+* Azure-ready manual deploy jobs for validation, staging, and production
+* Cloud architecture, runbook, GitLab deployment, and portfolio documentation
 
 ---
 
@@ -35,6 +36,16 @@ It starts as a simple HTTP service, then grows into a portfolio-ready cloud depl
 .
 |-- scripts/
 |   `-- build.js
+|-- docs/
+|   |-- ARCHITECTURE.md
+|   |-- GITLAB_DEPLOYMENT.md
+|   |-- PORTFOLIO.md
+|   `-- RUNBOOK.md
+|-- infra/
+|   |-- main.bicep
+|   |-- main.parameters.json
+|   `-- modules/
+|       `-- container-app.bicep
 |-- src/
 |   |-- app.js
 |   `-- index.js
@@ -44,6 +55,7 @@ It starts as a simple HTTP service, then grows into a portfolio-ready cloud depl
 |-- .dockerignore
 |-- .gitignore
 |-- .gitlab-ci.yml
+|-- azure.yaml
 |-- Dockerfile
 |-- package.json
 |-- package-lock.json
@@ -154,7 +166,13 @@ Pipeline stages:
 | docker | Build and push the container image |
 | deploy | Deploy to staging or production |
 
-Current deploy jobs are placeholders. The next major milestone is replacing those echo commands with a real cloud target.
+Deploy jobs are manual because they require an active Azure subscription and protected GitLab CI/CD variables.
+
+| Job | Purpose |
+| --- | --- |
+| `azure-validate` | Runs Azure deployment preview and AZD package validation |
+| `deploy-staging` | Provisions and deploys from `main` |
+| `deploy-production` | Provisions and deploys from version tags |
 
 ---
 
@@ -290,6 +308,13 @@ https://<container-app-url>/health
 https://<container-app-url>/ready
 ```
 
+Detailed docs:
+
+* [Architecture](docs/ARCHITECTURE.md)
+* [Operations Runbook](docs/RUNBOOK.md)
+* [GitLab Azure Deployment Setup](docs/GITLAB_DEPLOYMENT.md)
+* [Portfolio Story](docs/PORTFOLIO.md)
+
 ---
 
 # Build Output
@@ -335,9 +360,9 @@ Deploy to Cloud Environment
 
 # Next Work Items
 
-* Add real cloud deployment commands to `.gitlab-ci.yml`
-* Add Terraform or Bicep infrastructure
-* Add cloud-specific secrets and variables documentation
-* Add monitoring and alerting
-* Add a rollback runbook
-* Add an architecture diagram
+* Deploy to an active Azure subscription
+* Capture GitLab pipeline screenshots
+* Capture Azure Container Apps logs/revisions screenshots
+* Add Log Analytics KQL examples
+* Add a cost estimate and cleanup checklist
+* Add custom domain notes after deployment
