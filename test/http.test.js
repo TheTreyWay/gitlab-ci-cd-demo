@@ -60,6 +60,16 @@ test("GET /health returns healthy status", async () => {
   });
 });
 
+test("GET /ready returns ready status", async () => {
+  await withServer(async (server) => {
+    const response = await request(server, "/ready");
+
+    assert.equal(response.statusCode, 200);
+    assert.equal(response.headers["content-type"], "application/json");
+    assert.deepEqual(response.body, { status: "ready" });
+  });
+});
+
 test("GET / returns application status", async () => {
   await withServer(async (server) => {
     const response = await request(server, "/");

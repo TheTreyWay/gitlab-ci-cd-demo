@@ -9,6 +9,12 @@ export function handleRequest(req, res) {
     return;
   }
 
+  if (req.url === "/ready") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ status: "ready" }));
+    return;
+  }
+
   res.writeHead(200, { "Content-Type": "application/json" });
   res.end(JSON.stringify({
     app: "ci-cd-test-project",

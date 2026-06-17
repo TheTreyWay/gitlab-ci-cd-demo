@@ -1,6 +1,6 @@
 # Azure Deployment Plan
 
-> **Status:** Executing
+> **Status:** Ready for Validation
 
 Generated: 2026-06-16
 
@@ -139,20 +139,20 @@ The provisioning inventory is small and cost-optimized, but validation must run 
 ### Phase 2: Execution
 
 - [ ] Research selected services
-- [ ] Generate `azure.yaml`
-- [ ] Generate Bicep infrastructure files under `infra/`
-- [ ] Configure Container Apps ingress and health probes
-- [ ] Reuse existing Dockerfile
-- [ ] Add deployment notes to README
-- [ ] Update plan status to `Ready for Validation`
+- [x] Generate `azure.yaml`
+- [x] Generate Bicep infrastructure files under `infra/`
+- [x] Configure Container Apps ingress and health probes
+- [x] Reuse existing Dockerfile
+- [x] Add deployment notes to README
+- [x] Update plan status to `Ready for Validation`
 
 ### Phase 3: Validation
 
-- [ ] Invoke azure-validate skill
+- [x] Invoke azure-validate skill
 - [ ] Validate Azure CLI authentication
-- [ ] Validate Bicep syntax
+- [x] Validate Bicep syntax
 - [ ] Validate AZD configuration
-- [ ] Validate Docker build
+- [x] Validate Docker build
 - [ ] Validate quota/capacity
 - [ ] Update plan status to `Validated`
 
@@ -178,8 +178,25 @@ The provisioning inventory is small and cost-optimized, but validation must run 
 | Local build | `npm run build` | Pass | 2026-06-16 |
 | Docker build | `docker build -t ci-cd-cloud-lab .` | Pass | 2026-06-16 |
 | Docker runtime | `docker run ...` plus endpoint checks | Pass | 2026-06-16 |
+| Bicep compile | `az bicep build --file infra/main.bicep` | Pass | 2026-06-16 |
+| AZD installation | `winget list --id Microsoft.Azd` | Installed, but current shell cannot resolve `azd` until PATH/session refresh | 2026-06-16 |
+| AZD executable | `C:\Users\globber\AppData\Local\Programs\Azure Dev CLI\azd.exe version` | Pass | 2026-06-16 |
+| AZD environment | `azd env new dev`, `azd env set AZURE_SUBSCRIPTION_ID ...`, `azd env set AZURE_LOCATION eastus` | Pass | 2026-06-16 |
+| AZD auth check | `azd auth login --check-status` | Not logged in | 2026-06-16 |
+| AZD device login | `azd auth login --use-device-code` | Timed out before login completed in Codex shell | 2026-06-16 |
+| AZD validation | `azd provision --preview --no-prompt`, `azd package --no-prompt` | Blocked until AZD auth is completed | 2026-06-16 |
 
-**Validated by:** Local preparation only. Azure validation still required.
+**Validated by:** azure-validate partial run. Full Azure validation still required before deployment.
+
+---
+
+## Role Assignment Verification
+
+| Identity | Role | Scope | Status |
+|----------|------|-------|--------|
+| Container App system-assigned managed identity | AcrPull (`7f951dda-4ed3-4680-a7ca-43fe172d538d`) | Azure Container Registry | Verified |
+
+The application does not access Azure data-plane services yet, so no Key Vault, Storage, SQL, Service Bus, or Cosmos DB roles are required.
 
 ---
 
@@ -188,11 +205,11 @@ The provisioning inventory is small and cost-optimized, but validation must run 
 | File | Purpose | Status |
 |------|---------|--------|
 | `.azure/deployment-plan.md` | This plan | Created |
-| `azure.yaml` | AZD configuration | Pending approval |
-| `infra/main.bicep` | Main Azure infrastructure | Pending approval |
-| `infra/main.parameters.json` | Parameters for deployment | Pending approval |
-| `infra/modules/*.bicep` | Resource modules if needed | Pending approval |
-| `README.md` | Azure deployment notes | Pending approval |
+| `azure.yaml` | AZD configuration | Created |
+| `infra/main.bicep` | Main Azure infrastructure | Created |
+| `infra/main.parameters.json` | Parameters for deployment | Created |
+| `infra/modules/container-app.bicep` | Container Apps, ACR, logs, monitoring | Created |
+| `README.md` | Azure deployment notes | Updated |
 
 ---
 
@@ -207,10 +224,9 @@ The provisioning inventory is small and cost-optimized, but validation must run 
 
 ## 12. Next Steps
 
-Current phase: Planning
+Current phase: Ready for Validation
 
-1. User approves the plan assumptions.
-2. Refresh Azure CLI authentication if needed.
-3. Generate AZD and Bicep deployment artifacts.
-4. Run Azure validation.
-5. Deploy with the Azure deployment workflow.
+1. Refresh Azure CLI authentication if needed.
+2. Complete AZD authentication with `azd auth login --use-device-code`.
+3. Deploy with the Azure deployment workflow.
+4. Verify public endpoint health checks.

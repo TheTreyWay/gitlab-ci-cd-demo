@@ -238,6 +238,60 @@ After that, moving the same app to Kubernetes is a natural next step.
 
 ---
 
+# Azure Deployment
+
+This repository is prepared for Azure Developer CLI deployment to Azure Container Apps.
+
+Planned Azure resources:
+
+* Azure Container Apps
+* Azure Container Apps Environment
+* Azure Container Registry
+* Log Analytics Workspace
+* Application Insights
+* System-assigned managed identity
+
+Deployment configuration files:
+
+```text
+azure.yaml
+infra/main.bicep
+infra/main.parameters.json
+infra/modules/container-app.bicep
+.azure/deployment-plan.md
+```
+
+Before provisioning, refresh Azure CLI authentication if needed:
+
+```bash
+az login
+```
+
+Create or select an Azure Developer CLI environment:
+
+```bash
+azd env new dev
+azd env set AZURE_SUBSCRIPTION_ID <subscription-id>
+azd env set AZURE_LOCATION eastus
+```
+
+Then validate and deploy through the Azure workflow:
+
+```bash
+azd provision
+azd deploy
+```
+
+After deployment, verify:
+
+```text
+https://<container-app-url>/
+https://<container-app-url>/health
+https://<container-app-url>/ready
+```
+
+---
+
 # Build Output
 
 The build stage generates:

@@ -1,0 +1,11 @@
+name: ci-cd-cloud-lab
+metadata:
+  template: azd-init
+
+services:
+  web:
+    project: .
+    host: containerapp
+    docker:
+      path: Dockerfile
+      context: .
